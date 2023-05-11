@@ -5,18 +5,18 @@
 *   Precondition: Elf is not null
 */
 void print_ident(unsigned char *e_ident) {
-    printf("Class: \n");
-    printf("\t\t%s\n", e_ident[EI_CLASS] == ELFCLASS32 ? "ARCH32" : "ARCH64");
-    printf("\t\t%s\n", e_ident[EI_VERSION] == EV_NONE ? "Invalid Version" : "Current Version");
-    printf("\t\t");
+    wprintw(stdscr, "Class: \n");
+    wprintw(stdscr, "\t\t%s\n", e_ident[EI_CLASS] == ELFCLASS32 ? "ARCH32" : "ARCH64");
+    wprintw(stdscr, "\t\t%s\n", e_ident[EI_VERSION] == EV_NONE ? "Invalid Version" : "Current Version");
+    wprintw(stdscr, "\t\t");
     switch(e_ident[EI_OSABI]) {
         case ELFOSABI_SYSV:
-            printf("UNIX SYSTEM V ABI\n"); break;
+            wprintw(stdscr, "UNIX SYSTEM V ABI\n"); break;
         case ELFOSABI_LINUX:
-            printf("Linux ABI\n"); break;
+            wprintw(stdscr, "Linux ABI\n"); break;
         case ELFOSABI_ARM:
-            printf("ARM Architecture ABI\n"); break;
-        default: printf("Could not find ABI\n"); break;
+            wprintw(stdscr, "ARM Architecture ABI\n"); break;
+        default: wprintw(stdscr, "Could not find ABI\n"); break;
     }
 }
 
@@ -53,18 +53,18 @@ char *print_machine(uint16_t machine) {
 
 void display_elf_header() {
     print_ident(elf->e_ident);
-    printf("Type:           %s\n", print_type(elf->e_type));
-    printf("Machine:        %s\n", print_machine(elf->e_machine));
-    printf("E_entry:        %li\n", elf->e_entry);
-    printf("E_phoff:        %li\n", elf->e_phoff);
-    printf("E_shoff:        %li\n", elf->e_shoff);
-    printf("E_flags:        %i\n",  elf->e_flags);
-    printf("E_ehsize:       %i\n",  elf->e_ehsize);
-    printf("E_phentsize:    %i\n",  elf->e_phentsize);
-    printf("E_phnum:        %i\n",  elf->e_phnum);
-    printf("E_shentsize:    %i\n",  elf->e_shentsize);
-    printf("E_shnum:        %i\n",  elf->e_shnum);
-    printf("E_shstrndx:     %i\n",  elf->e_shstrndx);
+    wprintw(stdscr, "Type:                                           %s\n", print_type(elf->e_type));
+    wprintw(stdscr, "Machine:                                        %s\n", print_machine(elf->e_machine));
+    wprintw(stdscr, "Entry Point:                                    %li\n", elf->e_entry);
+    wprintw(stdscr, "Program Header Offset:                          %li\n", elf->e_phoff);
+    wprintw(stdscr, "Section Header Offset:                          %li\n", elf->e_shoff);
+    wprintw(stdscr, "Processor Flags:                                %i\n",  elf->e_flags);
+    wprintw(stdscr, "Elf Header Size:                                %i\n",  elf->e_ehsize);
+    wprintw(stdscr, "Size of each entry in Program Header:           %i\n",  elf->e_phentsize);
+    wprintw(stdscr, "Number of entries in Program Header:            %i\n",  elf->e_phnum);
+    wprintw(stdscr, "Size of Section Header:                         %i\n",  elf->e_shentsize);
+    wprintw(stdscr, "Number of entries in the Section Header:        %i\n",  elf->e_shnum);
+    wprintw(stdscr, "Section Header Table Index of entry:            %i\n",  elf->e_shstrndx);
 }
 
 
