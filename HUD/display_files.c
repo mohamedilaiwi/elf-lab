@@ -2,6 +2,7 @@
 #include "logging.h"
 #include "contain_files.h"
 #include "../elf_runner.h"
+#include "../printing.h"
 
 int NUM_WINDOWS = 2;
 short COLOR_BEIGE  = 0;
@@ -312,12 +313,16 @@ void display_file_option(WINDOWS *windows[], DIRECTORY *directory, char *selecte
 
 
 
-/*
-*	display_information: Displays information about an executable files: size, arch, machine, etc..
-*		Pre: File exists in directory
-*		Post: Prints information about executable file size, arch, machine, etc..
-*/
 void display_information(WINDOWS *windows[], char *file) {
+
+}
+
+/*
+*	see_section_header: Displayins information about the section header of the executable file
+*		Pre: None
+*		Post: Prints information about executable files section header.
+*/
+void see_section_header(WINDOWS *windows[], char *file) {
 	clear();
 	use_default_colors();
 	init_pair(1, COLOR_RED, -1);
@@ -326,12 +331,20 @@ void display_information(WINDOWS *windows[], char *file) {
 	wattroff(stdscr, COLOR_PAIR(1));
 }
 
-void see_section_header(WINDOWS *windows[], char *file) {
 
-}
-
+/*
+*	see_metadata: Displays information about an executable files: size, arch, machine, etc..
+*		Pre: File exists in directory
+*		Post: Prints information about executable file size, arch, machine, etc..
+*/
 void see_metadata(WINDOWS *windows[], char *file) {
-
+	clear();
+	use_default_colors();
+	init_pair(1, COLOR_RED, -1);
+	wattron(stdscr, COLOR_PAIR(1));
+	display_elf_header();
+	wattroff(stdscr, COLOR_PAIR(1));
+	getch();
 }
 
 void find_relocation_table(WINDOWS *windows[], char *file) {
