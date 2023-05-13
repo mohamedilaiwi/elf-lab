@@ -19,3 +19,4 @@ char *print_machine(uint16_t machine);
 void display_elf_header(); // displays contents of elf  header
 char *deal_with_NDX(uint32_t index);
 void deal_with_scroll(int num_entries, Elf64_Sym *symtab);
+void deal_with_error();

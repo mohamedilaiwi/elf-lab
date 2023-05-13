@@ -3,7 +3,7 @@
 #include <ncurses.h>
 #include <dirent.h>
 #include <unistd.h>
-
+#include "virtual.h"
 
 
 

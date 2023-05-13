@@ -20,6 +20,16 @@ char *FILE_OPTIONS[] = {
                 };
 
 
+char *MEMORY_SECTIONS[] = {
+					"Heap",
+					"Stack",
+					"Vvar",
+					"Vdso",
+					"Shared Libraries",
+					"Elf Sections"
+				};
+
+
 static char *ELF_RUNNER_SOURCE = "../elf_runner.c ";
 static char *ELF_RUNNER_HEADER = "../elf_runner.h ";
 static char *ELF_PRINT_SOURCE  = "../printing.c ";
@@ -312,9 +322,63 @@ void display_file_option(WINDOWS *windows[], DIRECTORY *directory, char *selecte
 
 
 
-
+/*
+* 	Shows information about virtual address of sections text, data, rela, and process 
+*		Pre: None
+*		Post: Displays information about addresses and size it takes up.
+*/
 void display_information(WINDOWS *windows[], char *file) {
+	wclear(windows[0]->win);
+	use_default_colors();
+	int max_row, max_col;
+	getmaxyx(stdscr, max_row, max_col);
 
+	windows[0]->height = (max_row - 2);
+	windows[0]->width  = (max_col * .4); 
+	windows[0]->win = newwin(windows[0]->height, windows[0]->width, windows[0]->starty, windows[0]->startx);
+
+	init_pair(1, COLOR_BLACK, COLOR_WHITE);
+	wbkgd(windows[0]->win, COLOR_PAIR(1));
+	box(windows[0]->win, 0, 0);
+
+    char *pid;
+	long starting_address, ending_address;
+	// int i = 0;
+
+    pid = get_pid("test.c");
+	if (pid == NULL) {
+		deal_with_error();
+		return;
+	}
+    get_virtual_address(pid, &starting_address, &ending_address);
+
+	// THIS SECTION IS FOR DISPLAYING THE HEAP RANGE:
+	int y = 1;
+	int x = 3;;
+
+	mvwprintw(windows[0]->win, y++, x, "PID: %s\n", pid);
+    mvwprintw(windows[0]->win, y++, x, "Heap Virtual Addresses: \n");
+    mvwprintw(windows[0]->win, y++, x, "\t[*] Start: %lx\n", starting_address);
+    mvwprintw(windows[0]->win, y++, x, "\t[*] End:   %lx\n", ending_address);
+	mvwprintw(windows[0]->win, y++, x, "\t[*] Start: %li\n", ending_address - starting_address);
+	
+
+	// THIS SECTION IS FOR DISLAYING THE STACK RANGE:
+
+
+
+
+
+	// THIS SECTION IS FOR DISPLAYING THE VVAR RANGE:
+
+	// THIS SECTION IS FOR DISPLAYING THE VDSO RANGE:
+
+	// THIS SECTION IS FOR DISPLAYING THE SHARED LIBRARY RANGE:
+
+	// THIS SECTION IS FOR DISPLAYING THE ELF SECTIONS RANGE:
+
+	wrefresh(windows[0]->win);
+	getch();
 }
 
 /*

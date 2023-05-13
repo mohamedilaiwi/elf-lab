@@ -5,7 +5,8 @@ CC_OPTION = -c
 OB_OPTION = -o
 DIR = ..
 FILES = $(DIR)/elf_runner.h $(DIR)/elf_runner.c start_up.c contain_files.c logging.c logging.h  \
-			contain_files.h display_files.c display_files.h $(DIR)/printing.c $(DIR)/printing.h
+			contain_files.h display_files.c display_files.h $(DIR)/printing.c $(DIR)/printing.h \
+			virtual.c virtual.h
 NCURSES = -lncurses
 PANEL   = -lpanel
 

@@ -212,9 +212,8 @@ void create_elf(char *file_name) {
 
 }
 
-/* 
-int main(int argc, char *argv[]) {
+
+/* int main(int argc, char *argv[]) {
     create_elf(argv[1]);
     return 0;
-}
- */
+} */

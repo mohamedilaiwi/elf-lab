@@ -106,11 +106,11 @@ void deal_with_scroll(int num_entries, Elf64_Sym *symtab) {
 						addch(inch());
 
 						// clear the last line
-						move(LINES - 1, 0);
-						clrtoeol();
+					move(LINES - 1, 0);
+					clrtoeol();
 
-						// increment the index to the first statement
-						first_statement++;
+					// increment the index to the first statement
+					first_statement++;
 				}
 				break;
 		}
@@ -136,7 +136,9 @@ void deal_with_scroll(int num_entries, Elf64_Sym *symtab) {
 	}
 }
 
-
+/*
+*   Deals with the mapping of integer to string to print NDX.
+*/
 char *deal_with_NDX(uint32_t index) {
     char *snum = malloc(10);
     switch (index) {
@@ -145,4 +147,14 @@ char *deal_with_NDX(uint32_t index) {
         default: sprintf(snum, "%d", index);     return snum;
     }
     return snum;
+}
+
+
+/*
+*   If PID is error, this function deals with cleaning up and printing an error message.
+*/
+void deal_with_error() {
+    wprintw(stdscr, "Cannot find PID. Exiting...\n");
+    refresh();
+    getch();
 }
