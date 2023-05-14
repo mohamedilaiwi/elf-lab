@@ -66,19 +66,28 @@ void get_line(char *pid, char *section, char **maps_line) {
 *               start: heap_line[0]
 *               end:   heap_line[1]
 */
-void get_virtual_address(char *pid, long *starting_address, long *ending_address) {
+void get_virtual_address(char *pid, char *section, long *starting_address, long *ending_address) {
     char *line;
-    get_line(pid, "[heap]", &line);
-    char *virtual_addresses = strdup(strtok(line, " "));
+    get_line(pid, section, &line);
+    char *temp_addr = malloc(12);
 
-    char *token = strtok(virtual_addresses, "-");
-    if (token != NULL) {
-        *starting_address = strtol(token, NULL, 16);
-        token = strtok(NULL, "-");
-        *ending_address   = strtol(token, NULL, 16);
+    if (line == NULL) {
+        *starting_address = -1;
+        *ending_address   = -1;
+    } 
+    else {
+        // char *virtual_addresses = strdup(strtok(line, " "));
+        strncpy(temp_addr, line, 12);
+
+        // char *token = strtok(virtual_addresses, "-");
+        if (temp_addr != NULL) {
+            *starting_address = strtol(temp_addr, NULL, 16);
+            strncpy(temp_addr, line + 13, 12);
+            *ending_address   = strtol(temp_addr, NULL, 16);
+        }
     }
+    free(temp_addr);
 }
-
 
 
 /*
@@ -87,7 +96,8 @@ void get_virtual_address(char *pid, long *starting_address, long *ending_address
 *       Post: None
 */
 void get_stack_ranges(char *pid, char **virtual_addresses) {
-
+    char *line;
+    get_line(pid, "[stack]", &line);
 }
 
 

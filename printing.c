@@ -158,3 +158,57 @@ void deal_with_error() {
     refresh();
     getch();
 }
+
+
+/*
+*   print_virtuals: Deals with printing the virtual addresses of some section
+*       Pre: None
+*       Post: None
+*/
+void print_virtuals(WINDOW *win, char *pid) {
+    long starting_address, ending_address;
+
+    get_virtual_address(pid, "[heap]", &starting_address, &ending_address);
+
+	// THIS SECTION IS FOR DISPLAYING THE HEAP RANGE:
+	int y = 1;
+	int x = 3;;
+
+	mvwprintw(win, y++, x, "PID: %s\n", pid);
+    mvwprintw(win, y++, x, "Heap Virtual Addresses: \n");
+    mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
+    mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
+	mvwprintw(win, y++, x, "\t[*] Size: %li\n", ending_address - starting_address);
+	
+
+	// THIS SECTION IS FOR DISLAYING THE STACK RANGE:
+	y +=2;
+
+	get_virtual_address(pid, "[stack]", &starting_address, &ending_address);
+	mvwprintw(win, y++, x, "Stack Virtual Addresses: \n");
+	mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
+	mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
+	mvwprintw(win, y++, x, "\t[*] Size:  %li\n", ending_address - starting_address);
+
+
+	// THIS SECTION IS FOR DISPLAYING THE VVAR RANGE:
+	y +=2;
+
+	get_virtual_address(pid, "[vvar]", &starting_address, &ending_address);
+	mvwprintw(win, y++, x, "Vvar Virtual Address: \n");
+	mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
+	mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
+	mvwprintw(win, y++, x, "\t[*] Size:  %li\n", ending_address - starting_address);
+
+
+	// THIS SECTION IS FOR DISPLAYING THE VDSO RANGE:
+	y +=2;
+
+	get_virtual_address(pid, "[vdso]", &starting_address, &ending_address);
+	mvwprintw(win, y++, x, "Vdso Virtual Address: \n");
+	mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
+	mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
+	mvwprintw(win, y++, x, "\t[*] Size:  %li\n", ending_address - starting_address);
+
+
+}

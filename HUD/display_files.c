@@ -20,14 +20,6 @@ char *FILE_OPTIONS[] = {
                 };
 
 
-char *MEMORY_SECTIONS[] = {
-					"Heap",
-					"Stack",
-					"Vvar",
-					"Vdso",
-					"Shared Libraries",
-					"Elf Sections"
-				};
 
 
 static char *ELF_RUNNER_SOURCE = "../elf_runner.c ";
@@ -342,7 +334,7 @@ void display_information(WINDOWS *windows[], char *file) {
 	box(windows[0]->win, 0, 0);
 
     char *pid;
-	long starting_address, ending_address;
+	// long starting_address, ending_address;
 	// int i = 0;
 
     pid = get_pid("test.c");
@@ -350,28 +342,8 @@ void display_information(WINDOWS *windows[], char *file) {
 		deal_with_error();
 		return;
 	}
-    get_virtual_address(pid, &starting_address, &ending_address);
+	print_virtuals(windows[0]->win, pid);
 
-	// THIS SECTION IS FOR DISPLAYING THE HEAP RANGE:
-	int y = 1;
-	int x = 3;;
-
-	mvwprintw(windows[0]->win, y++, x, "PID: %s\n", pid);
-    mvwprintw(windows[0]->win, y++, x, "Heap Virtual Addresses: \n");
-    mvwprintw(windows[0]->win, y++, x, "\t[*] Start: %lx\n", starting_address);
-    mvwprintw(windows[0]->win, y++, x, "\t[*] End:   %lx\n", ending_address);
-	mvwprintw(windows[0]->win, y++, x, "\t[*] Start: %li\n", ending_address - starting_address);
-	
-
-	// THIS SECTION IS FOR DISLAYING THE STACK RANGE:
-
-
-
-
-
-	// THIS SECTION IS FOR DISPLAYING THE VVAR RANGE:
-
-	// THIS SECTION IS FOR DISPLAYING THE VDSO RANGE:
 
 	// THIS SECTION IS FOR DISPLAYING THE SHARED LIBRARY RANGE:
 

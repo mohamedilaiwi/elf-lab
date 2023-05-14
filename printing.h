@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "elf.h"
 #include <ncurses.h>
+#include "./HUD/virtual.h"
 
 
 
@@ -20,3 +21,4 @@ void display_elf_header(); // displays contents of elf  header
 char *deal_with_NDX(uint32_t index);
 void deal_with_scroll(int num_entries, Elf64_Sym *symtab);
 void deal_with_error();
+void print_virtuals(WINDOW *win, char *pid);
