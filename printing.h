@@ -14,6 +14,17 @@ extern char *STRING_INFO[10];       // maps integer to string representation
 extern char *BIND_TYPES[3];         // maps integer to bind types
 extern char *VISIBILITY[4];         // maps integer to visibility
 
+
+
+typedef struct _virtual_addresses {
+    char *name;
+    long starting_address;
+    long ending_address;
+    char *permissions;
+} V_ADDR;
+
+
+
 void print_ident   (unsigned char *e_ident);
 char *print_type   (uint16_t type); 
 char *print_machine(uint16_t machine);
@@ -21,4 +32,4 @@ void display_elf_header(); // displays contents of elf  header
 char *deal_with_NDX(uint32_t index);
 void deal_with_scroll(int num_entries, Elf64_Sym *symtab);
 void deal_with_error();
-void print_virtuals(WINDOW *win, char *pid);
+void print_virtuals(WINDOW *win, char *pid, struct _virtual_addresses v_add[], int num_entries, int lines_per_entry);

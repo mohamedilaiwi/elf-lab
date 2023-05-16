@@ -15,6 +15,7 @@ typedef struct _WINDOWS {
 } WINDOWS;
 
 
+
 extern int NUM_WINDOWS;    // win[0] is HUD to select file, win[1] is index to choose what to do with file
 struct _DIRECTORY;
 

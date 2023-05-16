@@ -165,50 +165,83 @@ void deal_with_error() {
 *       Pre: None
 *       Post: None
 */
-void print_virtuals(WINDOW *win, char *pid) {
-    long starting_address, ending_address;
+void print_virtuals(WINDOW *win, char *pid, V_ADDR v_add[], int num_entries, int lines_per_entry) {
+    int ch;
+    // int first_statement = 0;
+    int total_space = num_entries * lines_per_entry;
+    int highlight = 0;
+    int i;
+    // wbkgdset(win, COLOR_WHITE);
 
-    get_virtual_address(pid, "[heap]", &starting_address, &ending_address);
+    init_pair(5, COLOR_RED, -1);
+    while ((ch = getch()) != 'q') {
+        int y = 0, x = 2;
+        switch (ch) {
+            case KEY_UP:
+                if (highlight > 0) {
+                    move(LINES - 1, 0);
 
-	// THIS SECTION IS FOR DISPLAYING THE HEAP RANGE:
-	int y = 1;
-	int x = 3;;
+                    // shift entire window contents up one line
+                    for (int i = 0; i < COLS * (LINES - 1); i++) 
+                        addch(inch());
+                    
+                    // clearing the last line
+                    move(LINES - 1, 0);
+                    clrtoeol();
 
-	mvwprintw(win, y++, x, "PID: %s\n", pid);
-    mvwprintw(win, y++, x, "Heap Virtual Addresses: \n");
-    mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
-    mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
-	mvwprintw(win, y++, x, "\t[*] Size: %li\n", ending_address - starting_address);
-	
+                    // decrement index of first
+                    highlight--;
+                }
+                break;
+            case KEY_DOWN:
+                mvwprintw(stdscr, 5, 40, "First_State: %i, y: %i, Lines: %i\n", highlight, getcury(win), LINES - 3);
+                if (getcury(win) <= LINES - 3) {
+                    if (highlight < total_space - (LINES - 1)) {
+                        move(LINES - 1, 0);
 
-	// THIS SECTION IS FOR DISLAYING THE STACK RANGE:
-	y +=2;
+                        for (int col = 0; col < COLS * (LINES - 1); col++)
+                            addch(inch());
 
-	get_virtual_address(pid, "[stack]", &starting_address, &ending_address);
-	mvwprintw(win, y++, x, "Stack Virtual Addresses: \n");
-	mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
-	mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
-	mvwprintw(win, y++, x, "\t[*] Size:  %li\n", ending_address - starting_address);
+                        move(LINES - 1, 0);
+                        clrtoeol();
+                    }
+                    highlight++;
+                } else {
+                    break;
+                }
+        }
 
+        // Clear and redraw the window
+        wclear(win);
+        i = highlight > LINES / num_entries ? highlight - 1 : 0;
+        mvwprintw(stdscr, 7, 40, "i: %i, LINES: %i, highlight: %i\n", i, LINES, highlight);
+        for (; i < num_entries; i++) {
+            // int statement_index = first_statement + i;
+            if (highlight == i + 1) {
+                wattron(win, COLOR_PAIR(4));
+                mvwprintw(win, y++, x, "%s Virtual Address: \n", v_add[i].name);
+                wattroff(win, COLOR_PAIR(4));
 
-	// THIS SECTION IS FOR DISPLAYING THE VVAR RANGE:
-	y +=2;
-
-	get_virtual_address(pid, "[vvar]", &starting_address, &ending_address);
-	mvwprintw(win, y++, x, "Vvar Virtual Address: \n");
-	mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
-	mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
-	mvwprintw(win, y++, x, "\t[*] Size:  %li\n", ending_address - starting_address);
-
-
-	// THIS SECTION IS FOR DISPLAYING THE VDSO RANGE:
-	y +=2;
-
-	get_virtual_address(pid, "[vdso]", &starting_address, &ending_address);
-	mvwprintw(win, y++, x, "Vdso Virtual Address: \n");
-	mvwprintw(win, y++, x, "\t[*] Start: %lx\n", starting_address);
-	mvwprintw(win, y++, x, "\t[*] End:   %lx\n", ending_address);
-	mvwprintw(win, y++, x, "\t[*] Size:  %li\n", ending_address - starting_address);
-
-
+                mvwprintw(win, y++, x, "\t[*] Start: %lx\n"    , v_add[i].starting_address);
+                mvwprintw(win, y++, x, "\t[*] End:   %lx\n"    , v_add[i].ending_address);
+                mvwprintw(win, y++, x, "\t[*] Size:  %li\n"    , v_add[i].ending_address - v_add[i].starting_address);    
+                mvwprintw(win, y++, x, "\t[*] Perms: %s\n\n"   , v_add[i].permissions); 
+            } else {
+                mvwprintw(win, y++, x, "%s Virtual Address: \n", v_add[i].name);
+                mvwprintw(win, y++, x, "\t[*] Start: %lx\n"    , v_add[i].starting_address);
+                mvwprintw(win, y++, x, "\t[*] End:   %lx\n"    , v_add[i].ending_address);
+                mvwprintw(win, y++, x, "\t[*] Size:  %li\n"    , v_add[i].ending_address - v_add[i].starting_address);    
+                mvwprintw(win, y++, x, "\t[*] Perms: %s\n\n"   , v_add[i].permissions);                 
+            }
+/*             if (statement_index >= 0 && statement_index < num_entries) {
+                mvwprintw(win, y++, x, "%s Virtual Address: \n", v_add[statement_index].name);
+                mvwprintw(win, y++, x, "\t[*] Start: %lx\n"    , v_add[statement_index].starting_address);
+                mvwprintw(win, y++, x, "\t[*] End:   %lx\n"    , v_add[statement_index].ending_address);
+                mvwprintw(win, y++, x, "\t[*] Size:  %li\n"    , v_add[statement_index].ending_address - v_add[statement_index].starting_address);    
+                mvwprintw(win, y++, x, "\t[*] Perms: %s\n\n"   , v_add[statement_index].permissions); 
+            } */
+        }
+        wrefresh(win);
+        wmove(win, 0, 0);
+    }
 }

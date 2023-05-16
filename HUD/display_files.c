@@ -89,6 +89,7 @@ void display_hud(DIRECTORY *directory) {
 	}
 	select_choice(windows, directory, choice);
 
+	wstandend(stdscr);
 	refresh();
 	endwin();
 }
@@ -329,21 +330,58 @@ void display_information(WINDOWS *windows[], char *file) {
 	windows[0]->width  = (max_col * .4); 
 	windows[0]->win = newwin(windows[0]->height, windows[0]->width, windows[0]->starty, windows[0]->startx);
 
-	init_pair(1, COLOR_BLACK, COLOR_WHITE);
-	wbkgd(windows[0]->win, COLOR_PAIR(1));
-	box(windows[0]->win, 0, 0);
-
-    char *pid;
-	// long starting_address, ending_address;
-	// int i = 0;
+ 	wrefresh(windows[0]->win);
+ 
+    char *pid, *permissions = malloc(5);
 
     pid = get_pid("test.c");
 	if (pid == NULL) {
 		deal_with_error();
 		return;
 	}
-	print_virtuals(windows[0]->win, pid);
+	V_ADDR v_addr[6];
+	long starting_address, ending_address;
 
+	get_virtual_address(pid, "[heap]", &starting_address, &ending_address, permissions);
+	v_addr[0].name = "Heap";
+	v_addr[0].starting_address = starting_address;
+	v_addr[0].ending_address   = ending_address;
+	v_addr[0].permissions = permissions;
+
+	get_virtual_address(pid, "[stack]", &starting_address, &ending_address, permissions);
+	v_addr[1].name = "Stack";
+	v_addr[1].starting_address = starting_address;
+	v_addr[1].ending_address   = ending_address;
+	v_addr[1].permissions = permissions;
+
+	get_virtual_address(pid, "[vvar]", &starting_address, &ending_address, permissions);
+	v_addr[2].name = "Vvar";
+	v_addr[2].starting_address = starting_address;
+	v_addr[2].ending_address   = ending_address;
+	v_addr[2].permissions = permissions;
+
+	get_virtual_address(pid, "[vdso]", &starting_address, &ending_address, permissions);
+	v_addr[3].name = "Vdso";
+	v_addr[3].starting_address = starting_address;
+	v_addr[3].ending_address   = ending_address;
+	v_addr[3].permissions = permissions;
+
+	get_virtual_address(pid, "[heap]", &starting_address, &ending_address, permissions);
+	v_addr[4].name = "Heap";
+	v_addr[4].starting_address = starting_address;
+	v_addr[4].ending_address   = ending_address;
+	v_addr[4].permissions = permissions;
+
+	get_virtual_address(pid, "[stack]", &starting_address, &ending_address, permissions);
+	v_addr[5].name = "Stack";
+	v_addr[5].starting_address = starting_address;
+	v_addr[5].ending_address   = ending_address;
+	v_addr[5].permissions = permissions;
+
+	init_pair(4, COLOR_RED, -1);
+    wattron(windows[0]->win, COLOR_PAIR(4));
+	print_virtuals(windows[0]->win, pid, v_addr, 6, 5);
+	wattroff(windows[0]->win, COLOR_PAIR(4));
 
 	// THIS SECTION IS FOR DISPLAYING THE SHARED LIBRARY RANGE:
 

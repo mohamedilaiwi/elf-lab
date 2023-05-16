@@ -66,7 +66,7 @@ void get_line(char *pid, char *section, char **maps_line) {
 *               start: heap_line[0]
 *               end:   heap_line[1]
 */
-void get_virtual_address(char *pid, char *section, long *starting_address, long *ending_address) {
+void get_virtual_address(char *pid, char *section, long *starting_address, long *ending_address, char *perms) {
     char *line;
     get_line(pid, section, &line);
     char *temp_addr = malloc(12);
@@ -84,6 +84,7 @@ void get_virtual_address(char *pid, char *section, long *starting_address, long 
             *starting_address = strtol(temp_addr, NULL, 16);
             strncpy(temp_addr, line + 13, 12);
             *ending_address   = strtol(temp_addr, NULL, 16);
+            strncpy(perms, line + 26, 4);
         }
     }
     free(temp_addr);
